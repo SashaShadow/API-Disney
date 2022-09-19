@@ -1,4 +1,11 @@
 import {Pelicula} from "../dbmodels/modelsIndex.js";
+import {PeliculaTest} from "../dbmodels/modelsIndexTest.js";
+import minimist from "minimist";
+
+const options = { alias: {  m: 'MODE' } }
+const myArgs = minimist(process.argv.slice(2), options)
+
+const PeliculaModel = myArgs.MODE === 'test' ? PeliculaTest : Pelicula;
 
 class PersonajeDAO {
     constructor(model) {
@@ -20,7 +27,7 @@ class PersonajeDAO {
                 });
                 return personajes;
             } else {
-                const pelicula = await Pelicula.findOne({where: {titulo: query[1]}});
+                const pelicula = await PeliculaModel.findOne({where: {titulo: query[1]}});
 
                 if (pelicula) {
                     const personajes = await pelicula.getPersonajes({ joinTableAttributes: [] });
@@ -48,7 +55,7 @@ class PersonajeDAO {
             },
             include: [
                 {
-                    model: Pelicula,
+                    model: PeliculaModel,
                     as: 'peliculas',
                     attributes:['titulo']
                 }
@@ -65,9 +72,9 @@ class PersonajeDAO {
 
             const newCharacter = await this.model.create(personaje);
 
-            const [isMovie, created] = await Pelicula.findOrCreate({where: {titulo: pelicula}});
+            const [isMovie, created] = await PeliculaModel.findOrCreate({where: {titulo: pelicula}});
 
-            await newCharacter.addPeliculas(await Pelicula.findOne({where: {titulo: pelicula}})) 
+            await newCharacter.addPeliculas(await PeliculaModel.findOne({where: {titulo: pelicula}})) 
             return newCharacter;
         }
 
@@ -88,9 +95,9 @@ class PersonajeDAO {
 
             const character = await this.model.findOne({where: {nombre: modCharacter.nombre}});
 
-            const [isMovie, created] = await Pelicula.findOrCreate({where: {titulo: pelicula}});
+            const [isMovie, created] = await PeliculaModel.findOrCreate({where: {titulo: pelicula}});
 
-            await character.addPeliculas(await Pelicula.findOne({where: {titulo: pelicula}}));
+            await character.addPeliculas(await PeliculaModel.findOne({where: {titulo: pelicula}}));
 
             return [modificado, modCharacter]
         }

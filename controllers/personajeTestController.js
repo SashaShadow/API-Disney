@@ -1,8 +1,8 @@
 import PersonajeDAO from "../daos/personajeDAO.js";
 import PersonajeService from "../services/personajeService.js";
-import {Personaje} from "../dbmodels/modelsIndex.js";
+import {PersonajeTest} from "../dbmodels/modelsIndexTest.js";
 
-const personajeStorage = new PersonajeDAO(Personaje);
+const personajeStorage = new PersonajeDAO(PersonajeTest);
 const personajeService = new PersonajeService(personajeStorage);
 
 export const getCharacters = async (req, res) => {
@@ -22,7 +22,7 @@ export const characterDetails = async (req, res) => {
     .then(personaje => {
         personaje ? res.json({personaje}) : res.json({error: 'Personaje no encontrado'})
     })
-    .catch(err => res.json({error: err}));
+    .catch(err => res.json({error: err.toString()}));
 }
 
 export const createCharacter = async (req, res) => {

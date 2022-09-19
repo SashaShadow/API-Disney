@@ -1,5 +1,11 @@
-import { Op } from "sequelize";
 import {Personaje} from "../dbmodels/modelsIndex.js";
+import {PersonajeTest} from "../dbmodels/modelsIndexTest.js";
+import minimist from "minimist";
+
+const options = { alias: {  m: 'MODE' } }
+const myArgs = minimist(process.argv.slice(2), options)
+
+const PersonajeModel = myArgs.MODE === 'test' ? PersonajeTest : Personaje;
 
 class PeliculaDAO {
     constructor(model) {
@@ -50,7 +56,7 @@ class PeliculaDAO {
             },
             include: [
                 {
-                    model: Personaje,
+                    model: PersonajeModel,
                     as: 'personajes',
                     attributes:{exclude: ['id', 'createdAt', 'updatedAt', 'edad', 'peso', 'imagen']}
                 }
@@ -66,9 +72,9 @@ class PeliculaDAO {
 
             const newMovie = await this.model.create(pelicula);
 
-            const [isChara, created] = await Personaje.findOrCreate({where: {nombre: personaje}});
+            const [isChara, created] = await PersonajeModel.findOrCreate({where: {nombre: personaje}});
 
-            await newMovie.addPersonajes(await Personaje.findOne({where: {nombre: personaje}}));
+            await newMovie.addPersonajes(await PersonajeModel.findOne({where: {nombre: personaje}}));
             return newMovie;
         }
 
@@ -89,9 +95,9 @@ class PeliculaDAO {
 
             const movie = await this.model.findOne({where: {titulo: modMovie.titulo}});
 
-            const [isChara, created] = await Personaje.findOrCreate({where: {nombre: personaje}});
+            const [isChara, created] = await PersonajeModel.findOrCreate({where: {nombre: personaje}});
 
-            await movie.addPersonajes(await Personaje.findOne({where: {nombre: personaje}}));
+            await movie.addPersonajes(await PersonajeModel.findOne({where: {nombre: personaje}}));
 
             return [modificado, modMovie]
         }

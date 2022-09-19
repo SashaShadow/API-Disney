@@ -6,7 +6,7 @@ import characterRouter from './routers/personajeRouter.js';
 import movieRouter from "./routers/peliculasRouter.js";
 import { authMiddleware } from "./middlewares/authMiddleware.js";
 
-const options = { alias: {  p: 'PORT' } }
+const options = { alias: {  p: 'PORT', a: 'AUTH' } }
 const myArgs = minimist(process.argv.slice(2), options)
 const app = express();
 
@@ -21,8 +21,13 @@ server.on("error", error => console.log(`Error en el servidor: ${error}`));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
+if (myArgs.AUTH) {
+    app.use('/characters', authMiddleware, characterRouter);
+    app.use('/movies', authMiddleware, movieRouter);
+} else {
+    app.use('/characters', characterRouter);
+    app.use('/movies', movieRouter);
+}
+
 app.use('/auth', authRouter);
-// app.use('/characters', authMiddleware, characterRouter);
-// app.use('/movies', authMiddleware, movieRouter);
-app.use('/characters', characterRouter);
-app.use('/movies', movieRouter);
+

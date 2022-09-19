@@ -1,8 +1,8 @@
 import PeliculaDAO from "../daos/peliculaDAO.js";
 import PeliculaService from "../services/peliculaService.js";
-import {Pelicula} from "../dbmodels/modelsIndex.js";
+import {PeliculaTest} from "../dbmodels/modelsIndexTest.js";
 
-const peliculaStorage = new PeliculaDAO(Pelicula);
+const peliculaStorage = new PeliculaDAO(PeliculaTest);
 const peliculaService = new PeliculaService(peliculaStorage);
 
 export const getMovies = async (req, res) => {
@@ -30,7 +30,7 @@ export const createMovie = async (req, res) => {
 
     return peliculaService.createMovie(pelicula)
     .then(pelicula => res.json({mensaje: 'Pelicula creada', pelicula: pelicula}))
-    .catch(err => res.json({error: err.toString()}));
+    .catch(err => res.json({error: err}));
 }
 
 export const updateMovie = async (req, res) => {
