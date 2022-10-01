@@ -8,12 +8,12 @@ export const createCharaMiddleware = () => {
                 if (typeof personaje.pelicula === 'string') {
                     return next();
                 } else {
-                    res.json({error: 'Escribe la película como texto (string)'})
+                    res.status(400).json({error: 'Escribe la película como texto (string)'})
                 }
             }
             next()
         } else {
-            res.json({error: 'parametros incorrectos'})
+            res.status(400).json({error: 'parametros incorrectos'})
         }
     }
 }

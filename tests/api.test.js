@@ -51,6 +51,7 @@ describe('Tests a las funciones CRUD de los Personajes y Peliculas', function() 
 
         let response = await myReq.post('/characters').send(newCharacter);
         expect(response.body.error).to.eql('parametros incorrectos');
+        expect(response.status).to.eql(400);
     })
 
     it('should list the character details with the given name (GET /characters/:nombre/details)', async () => {
@@ -63,7 +64,7 @@ describe('Tests a las funciones CRUD de los Personajes y Peliculas', function() 
 
     it('should return a error message when the given name character does not exist (GET /characters/:nombre/details)', async () => {
         let response = await myReq.get('/characters/Jim Jackson/details')
-        expect(response.status).to.eql(200);
+        expect(response.status).to.eql(404);
 
         const error = response.body.error;
         expect(error).to.eql('Personaje no encontrado')
@@ -79,7 +80,7 @@ describe('Tests a las funciones CRUD de los Personajes y Peliculas', function() 
         }
 
         let update = await myReq.put('/characters/Jim Hawkins').send(updatedCharacter);
-        expect(update.status).to.be.equal(200);
+        expect(update.status).to.be.equal(201);
         expect(update.body.personaje).to.eql(updatedCharacter);
     })
 
@@ -93,7 +94,7 @@ describe('Tests a las funciones CRUD de los Personajes y Peliculas', function() 
         }
 
         let update = await myReq.put('/characters/Jim Hawkins').send(updatedCharacter);
-        expect(update.status).to.be.equal(200);
+        expect(update.status).to.be.equal(400);
         expect(update.body.error).to.eql('parametros incorrectos');
     })
 
@@ -111,7 +112,7 @@ describe('Tests a las funciones CRUD de los Personajes y Peliculas', function() 
     it('should return an error message when trying to delete a character that does not exist (DELETE /characters/:nombre)', async () => {
         let deleted = await myReq.delete(`/characters/Jim Jackson`);
 
-        expect(deleted.status).to.eql(200); 
+        expect(deleted.status).to.eql(404); 
         expect(deleted.body.error).to.eql('Personaje no encontrado')
     })
 
@@ -138,7 +139,7 @@ describe('Tests a las funciones CRUD de los Personajes y Peliculas', function() 
         }
 
         let response = await myReq.post('/movies').send(newMovie);
-        expect(response.status).to.be.equal(200);
+        expect(response.status).to.be.equal(201);
 
         const movie = response.body.pelicula;
         expect(movie).to.include.keys('titulo', 'imagen', 'calificacion');
@@ -160,6 +161,7 @@ describe('Tests a las funciones CRUD de los Personajes y Peliculas', function() 
 
         let response = await myReq.post('/movies').send(newMovie);
         expect(response.body.error.name).to.eql('SequelizeValidationError');
+        expect(response.status).to.eql(400);
     })
 
     it('should list the movie details with the given title (GET /movies/:titulo/details)', async () => {
@@ -172,7 +174,7 @@ describe('Tests a las funciones CRUD de los Personajes y Peliculas', function() 
 
     it('should return an error message when the movie title does not exist (GET /movies/:titulo/details)', async () => {
         let response = await myReq.get('/movies/El Planeta del Trabajo/details')
-        expect(response.status).to.eql(200);
+        expect(response.status).to.eql(404);
 
         const error = response.body.error;
         expect(error).to.eql('Pelicula no encontrada');
@@ -186,7 +188,7 @@ describe('Tests a las funciones CRUD de los Personajes y Peliculas', function() 
         }
 
         let update = await myReq.put('/movies/El Planeta del Tesoro').send(updatedMovie);
-        expect(update.status).to.be.equal(200);
+        expect(update.status).to.be.equal(201);
         expect(update.body.pelicula).to.eql(updatedMovie);
     })
 
@@ -198,7 +200,7 @@ describe('Tests a las funciones CRUD de los Personajes y Peliculas', function() 
         }
 
         let update = await myReq.put('/movies/El Planeta del Tesoro').send(updatedMovie);
-        expect(update.status).to.be.equal(200);
+        expect(update.status).to.be.equal(404);
         expect(update.body.error).to.eql('Pelicula no encontrada o con formato erróneo');
     })
 
@@ -216,7 +218,7 @@ describe('Tests a las funciones CRUD de los Personajes y Peliculas', function() 
     it('should return an error message when trying to delete a movie that does not exist (DELETE /movies/:titulo)', async () => {
         let deleted = await myReq.delete(`/movies/El Planeta del Trabajo`);
 
-        expect(deleted.status).to.eql(200); 
+        expect(deleted.status).to.eql(404); 
         expect(deleted.body.error).to.eql('Pelicula no encontrada')
     })
 })
