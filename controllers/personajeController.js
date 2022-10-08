@@ -11,8 +11,8 @@ export const getCharacters = async (req, res) => {
     const movieQuery = ['peliculas', req.query.movie]
 
     return personajeService.getCharacters(nameQuery, ageQuery, movieQuery)
-    .then(personajes => res.json({personajes}))
-    .catch(err => res.json({error: err}));
+    .then(personajes => res.status(200).json({personajes}))
+    .catch(err => res.status(500).json({error: err}));
 }
 
 export const characterDetails = async (req, res) => {
@@ -20,7 +20,7 @@ export const characterDetails = async (req, res) => {
     
     return personajeService.characterDetails(personajeId)
     .then(personaje => {
-        personaje ? res.json({personaje}) : res.json({error: 'Personaje no encontrado'})
+        personaje ? res.status(200).json({personaje}) : res.status(404).json({error: 'Personaje no encontrado'})
     })
     .catch(err => res.json({error: err}));
 }
@@ -29,7 +29,7 @@ export const createCharacter = async (req, res) => {
     const personaje = req.body;
 
     return personajeService.createCharacter(personaje)
-    .then(personaje => res.json({mensaje: 'Personaje creado', personaje: personaje}))
+    .then(personaje => res.status(201).json({mensaje: 'Personaje creado', personaje: personaje}))
     .catch(err => res.json({error: err}));
 }
 
@@ -39,9 +39,9 @@ export const updateCharacter = async (req, res) => {
     const isModified = await personajeService.updateCharacter(personajeMod, personajeId)
   
     if (isModified[0][0] > 0) {
-        res.json({mensaje: 'Personaje modificado', personaje: isModified[1]})
+        res.status(201).json({mensaje: 'Personaje modificado', personaje: isModified[1]})
     } else if (isModified[0][0] === 0) {
-        res.json({error: 'Personaje no encontrado o con formato erróneo'})
+        res.status(404).json({error: 'Personaje no encontrado o con formato erróneo'})
     }
 }
 
@@ -50,8 +50,8 @@ export const deleteCharacter = async (req, res) => {
     const isDeleted = await personajeService.deleteCharacter(personaje)
     
     if (isDeleted > 0) {
-        res.json({mensaje: 'Personaje eliminado'})
+        res.status(200).json({mensaje: 'Personaje eliminado'})
     } else {
-        res.json({error: 'Personaje no encontrado'})
+        res.status(404).json({error: 'Personaje no encontrado'})
     }
 }

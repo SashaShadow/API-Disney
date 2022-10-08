@@ -29,7 +29,7 @@ export const createCharacter = async (req, res) => {
     const personaje = req.body;
 
     return personajeService.createCharacter(personaje)
-    .then(personaje => res.json({mensaje: 'Personaje creado', personaje: personaje}))
+    .then(personaje => res.status(201).json({mensaje: 'Personaje creado', personaje: personaje}))
     .catch(err => res.json({error: err}));
 }
 
