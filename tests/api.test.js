@@ -1,17 +1,14 @@
 import request from 'supertest';
-import minimist from "minimist";
 import { expect } from 'chai';
 import { describe } from 'mocha';
 
-const options = { alias: {  p: 'PORT' } }
-const myArgs = minimist(process.argv.slice(2), options)
-
-const PORT = myArgs.PORT || process.env.PORT || 8080;
+const PORT = 8080;
 
 const myReq = request(`http://localhost:${PORT}`);
 
 //ASEGURARSE ANTES DE INICIAR LOS TESTS DE INICIAR EL SERVER CON EL COMANDO --m test PARA UTILIZAR EL MODO PARA TESTING.
 //PARA INICIAR LOS TESTS EJECUTAR POR CONSOLA npm test
+//EL PUERTO INICIA POR DEFAULT EN 8080, SI SE INICIA EL SERVIDOR CON OTRO PUERTO CAMBIAR EN ESTE ARCHIVO EL PUERTO ELEGIDO.
 //LAS TABLAS DE PELICULAS Y PERSONAJES ESTÁN VACIAS AL INICIO Y SOLO SE MANEJAN UN PERSONAJE/PELICULA QUE SE AGREGA Y ELIMINA CON LOS MISMOS TESTS.
 
 describe('Tests a las funciones CRUD de los Personajes y Peliculas', function() {
